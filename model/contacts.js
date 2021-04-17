@@ -1,6 +1,6 @@
 const fs = require('fs/promises');
 const patch = require('path');
-// const contacts = require('./contacts.json');
+const shortid = require('shortid');
 
 const contactsPath = patch.join(__dirname, 'contacts.json');
 
@@ -26,7 +26,24 @@ const getContactById = async contactId => {
 
 const removeContact = async contactId => {};
 
-const addContact = async body => {};
+const addContact = async body => {
+  const id = shortid();
+  const newContact = {
+    id: id,
+    name: body.name,
+    email: body.email,
+    phone: body.phone,
+  };
+  try {
+    return await listContacts().then(contacts => {
+      contacts.push(newContact);
+      const data = JSON.stringify(contacts, 0, 2);
+      return fs.writeFile(contactsPath, data, 'utf-8');
+    });
+  } catch (e) {
+    return console.log(e);
+  }
+};
 
 const updateContact = async (contactId, body) => {};
 
