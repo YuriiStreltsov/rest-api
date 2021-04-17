@@ -5,13 +5,24 @@ const patch = require('path');
 const contactsPath = patch.join(__dirname, 'contacts.json');
 
 const listContacts = async () => {
-  return await fs
-    .readFile(contactsPath, 'utf8')
-    .then(data => JSON.parse(data))
-    .catch(err => console.log(err.message));
+  try {
+    return await fs
+      .readFile(contactsPath, 'utf8')
+      .then(data => JSON.parse(data));
+  } catch (error) {
+    return error.message;
+  }
 };
 
-const getContactById = async contactId => {};
+const getContactById = async contactId => {
+  try {
+    return await listContacts().then(contacts =>
+      contacts.find(contact => String(contact.id) === contactId),
+    );
+  } catch (e) {
+    return error.message;
+  }
+};
 
 const removeContact = async contactId => {};
 
