@@ -1,11 +1,16 @@
 const Joi = require('joi');
 
+// Validation when creating a contact
 const schemaCreateContact = Joi.object({
   name: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
-  phone: Joi.number().integer().min(1).max(10).required(),
+  phone: Joi.string()
+    .regex(/^[0-9]{10}$/)
+    .messages({ 'string.pattern.base': `Phone number must have 10 digits.` })
+    .required(),
 });
 
+// Validation when updating a contact
 const schemaUpdateContact = Joi.object({
   name: Joi.string().min(3).max(30).optional(),
   email: Joi.string().email().optional(),

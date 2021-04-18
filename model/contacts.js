@@ -4,6 +4,7 @@ const shortid = require('shortid');
 
 const contactsPath = patch.join(__dirname, 'contacts.json');
 
+// Function Get all contacts
 const listContacts = async () => {
   try {
     return await fs
@@ -14,6 +15,7 @@ const listContacts = async () => {
   }
 };
 
+// Function Get contact by Id
 const getContactById = async contactId => {
   try {
     return await listContacts().then(contacts =>
@@ -24,6 +26,7 @@ const getContactById = async contactId => {
   }
 };
 
+// Function delete contacts
 const removeContact = async contactId => {
   try {
     const deletedContact = await getContactById(contactId);
@@ -38,6 +41,7 @@ const removeContact = async contactId => {
   }
 };
 
+// Function create contact
 const addContact = async body => {
   const id = shortid();
   const newContact = {
@@ -57,6 +61,7 @@ const addContact = async body => {
   }
 };
 
+// Function update contact
 const updateContact = async (contactId, body) => {
   try {
     const allContact = await listContacts();
@@ -77,12 +82,6 @@ const updateContact = async (contactId, body) => {
     return console.log(e);
   }
 };
-
-// const contactOld = await getContactById(contactId);
-// const contactNew = { ...contactOld, ...body };
-// const allContacts = await listContacts();
-// const record = [...allContacts, ...contactNew];
-// console.log(record);
 
 module.exports = {
   listContacts,
