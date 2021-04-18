@@ -22,7 +22,7 @@ const getContactById = async contactId => {
       contacts.find(contact => String(contact.id) === contactId),
     );
   } catch (e) {
-    return error.message;
+    return e.message;
   }
 };
 
@@ -37,7 +37,7 @@ const removeContact = async contactId => {
     fs.writeFile(contactsPath, data, 'utf-8');
     return deletedContact;
   } catch (e) {
-    return error.message;
+    return e.message;
   }
 };
 
@@ -57,7 +57,7 @@ const addContact = async body => {
       return newContact;
     });
   } catch (e) {
-    return console.log(e);
+    return e.message;
   }
 };
 
@@ -79,7 +79,7 @@ const updateContact = async (contactId, body) => {
     fs.writeFile(contactsPath, data, 'utf-8');
     return newContact;
   } catch (e) {
-    return console.log(e);
+    return e.message;
   }
 };
 
