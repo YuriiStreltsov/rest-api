@@ -59,6 +59,20 @@ const addContact = async body => {
 
 const updateContact = async (contactId, body) => {
   try {
+    const allContact = await listContacts();
+    const contact = await getContactById(contactId);
+    const newContact = { ...contact, ...body };
+    const record = allContact.map(contact => {
+      if (contact.id !== contactId) {
+        return contact;
+      }
+      return (contact = { ...newContact });
+    });
+
+    const data = JSON.stringify(record, 0, 2);
+    console.log(record);
+    fs.writeFile(contactsPath, data, 'utf-8');
+    return newContact;
   } catch (e) {
     return console.log(e);
   }
