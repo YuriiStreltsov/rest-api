@@ -18,7 +18,7 @@ const schemaUpdateContact = Joi.object({
     .regex(/^[0-9]{10}$/)
     .messages({ 'string.pattern.base': `Phone number must have 10 digits.` })
     .optional(),
-});
+}).min(1);
 
 const validate = async (schema, obj, next) => {
   try {
