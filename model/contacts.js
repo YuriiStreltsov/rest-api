@@ -50,7 +50,6 @@ const addContact = async body => {
   };
   try {
     return await listContacts().then(contacts => {
-      console.log(contacts);
       contacts.push(newContact);
       const data = JSON.stringify(contacts, 0, 2);
       fs.writeFile(contactsPath, data, 'utf-8');
@@ -75,7 +74,6 @@ const updateContact = async (contactId, body) => {
     });
 
     const data = JSON.stringify(record, 0, 2);
-    console.log(record);
     fs.writeFile(contactsPath, data, 'utf-8');
     return newContact;
   } catch (e) {
