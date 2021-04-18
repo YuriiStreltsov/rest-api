@@ -24,28 +24,51 @@ const getContactById = async contactId => {
   }
 };
 
-const removeContact = async contactId => {};
+const removeContact = async contactId => {
+  try {
+    const deletedContact = await getContactById(contactId);
+    const filtredContacts = await listContacts().then(contacts =>
+      contacts.filter(contact => String(contact.id) !== contactId),
+    );
+    const data = JSON.stringify(filtredContacts, 0, 2);
+    fs.writeFile(contactsPath, data, 'utf-8');
+    return deletedContact;
+  } catch (e) {
+    return error.message;
+  }
+};
 
 const addContact = async body => {
   const id = shortid();
   const newContact = {
     id: id,
-    name: body.name,
-    email: body.email,
-    phone: body.phone,
+    ...body,
   };
   try {
     return await listContacts().then(contacts => {
+      console.log(contacts);
       contacts.push(newContact);
       const data = JSON.stringify(contacts, 0, 2);
-      return fs.writeFile(contactsPath, data, 'utf-8');
+      fs.writeFile(contactsPath, data, 'utf-8');
+      return newContact;
     });
   } catch (e) {
     return console.log(e);
   }
 };
 
-const updateContact = async (contactId, body) => {};
+const updateContact = async (contactId, body) => {
+  try {
+  } catch (e) {
+    return console.log(e);
+  }
+};
+
+// const contactOld = await getContactById(contactId);
+// const contactNew = { ...contactOld, ...body };
+// const allContacts = await listContacts();
+// const record = [...allContacts, ...contactNew];
+// console.log(record);
 
 module.exports = {
   listContacts,
