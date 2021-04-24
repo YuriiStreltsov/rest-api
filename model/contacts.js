@@ -1,88 +1,37 @@
-const fs = require('fs/promises');
-const patch = require('path');
-const shortid = require('shortid');
-
-const contactsPath = patch.join(__dirname, 'contacts.json');
+const Contacts = require('./schema/contacts');
 
 // Function Get all contacts
-const listContacts = async () => {
-  try {
-    return await fs
-      .readFile(contactsPath, 'utf8')
-      .then(data => JSON.parse(data));
-  } catch (error) {
-    return error.message;
-  }
+const getAllContacts = async () => {
+  const allContacts = await Contacts.find();
+  return allContacts;
 };
 
 // Function Get contact by Id
 const getContactById = async contactId => {
-  try {
-    return await listContacts().then(contacts =>
-      contacts.find(contact => String(contact.id) === contactId),
-    );
-  } catch (e) {
-    return e.message;
-  }
+  const contact = await Contacts.findById(contactId);
+  return contact;
 };
 
 // Function delete contacts
 const removeContact = async contactId => {
-  try {
-    const deletedContact = await getContactById(contactId);
-    const filtredContacts = await listContacts().then(contacts =>
-      contacts.filter(contact => String(contact.id) !== contactId),
-    );
-    const data = JSON.stringify(filtredContacts, 0, 2);
-    fs.writeFile(contactsPath, data, 'utf-8');
-    return deletedContact;
-  } catch (e) {
-    return e.message;
-  }
+  const contact = Contacts.findByIdAndRemove(contactId);
+  return contact;
 };
 
 // Function create contact
 const addContact = async body => {
-  const id = shortid();
-  const newContact = {
-    id: id,
-    ...body,
-  };
-  try {
-    return await listContacts().then(contacts => {
-      contacts.push(newContact);
-      const data = JSON.stringify(contacts, 0, 2);
-      fs.writeFile(contactsPath, data, 'utf-8');
-      return newContact;
-    });
-  } catch (e) {
-    return e.message;
-  }
+  const newContact = Contacts.create(body);
+  return newContact;
 };
 
 // Function update contact
 const updateContact = async (contactId, body) => {
-  try {
-    const allContact = await listContacts();
-    const contact = await getContactById(contactId);
-    const newContact = { ...contact, ...body };
-    const record = allContact.map(contact => {
-      if (contact.id !== contactId) {
-        return contact;
-      }
-      return (contact = { ...newContact });
-    });
-
-    const data = JSON.stringify(record, 0, 2);
-    fs.writeFile(contactsPath, data, 'utf-8');
-    return newContact;
-  } catch (e) {
-    return e.message;
-  }
+  const contact = Contacts.findByIdAndUpdate(contactId, body, { new: true });
+  return contact;
 };
 
 module.exports = {
-  listContacts,
+  getAllContacts,
   getContactById,
   removeContact,
   addContact,

@@ -8,7 +8,7 @@ const {
 
 router.get('/', async (req, res, next) => {
   try {
-    const contacts = await Contacts.listContacts();
+    const contacts = await Contacts.getAllContacts();
     return res.json({
       status: 'succes',
       code: 200,
@@ -24,7 +24,6 @@ router.get('/', async (req, res, next) => {
 router.get('/:contactId', async (req, res, next) => {
   try {
     const contact = await Contacts.getContactById(req.params.contactId);
-    console.log(req.params.contactId);
     if (contact) {
       return res.json({
         status: 'success',
