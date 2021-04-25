@@ -20,7 +20,10 @@ const removeContact = async contactId => {
 
 // Function create contact
 const addContact = async body => {
-  const newContact = Contacts.create(body);
+  const newContact = Contacts.create({
+    ...body,
+    ...(body.favorite ? {} : { favorite: false }),
+  });
   return newContact;
 };
 
