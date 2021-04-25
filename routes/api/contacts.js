@@ -7,7 +7,7 @@ const {
   validationUpdateStatusContact,
 } = require('./validationContact');
 
-//Route to get all contacts
+//  Route to get all contacts
 router.get('/', async (req, res, next) => {
   try {
     const contacts = await Contacts.getAllContacts();
@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-//Route to get contact by ID
+//  Route to get contact by ID
 router.get('/:contactId', async (req, res, next) => {
   try {
     const contact = await Contacts.getContactById(req.params.contactId);
@@ -47,7 +47,7 @@ router.get('/:contactId', async (req, res, next) => {
   }
 });
 
-//Route to create a contact
+//  Route to create a contact
 router.post('/', validationCreateContact, async (req, res, next) => {
   try {
     const contact = await Contacts.addContact(req.body);
@@ -63,7 +63,7 @@ router.post('/', validationCreateContact, async (req, res, next) => {
   }
 });
 
-//Route to delete a contact by ID
+//  Route to delete a contact by ID
 router.delete('/:contactId', async (req, res, next) => {
   try {
     const contact = await Contacts.removeContact(req.params.contactId);
@@ -87,7 +87,7 @@ router.delete('/:contactId', async (req, res, next) => {
   }
 });
 
-//Route to update a contact by ID
+//  Route to update a contact by ID
 router.patch('/:contactId', validationUpdateContact, async (req, res, next) => {
   try {
     const contact = await Contacts.updateContact(
@@ -114,7 +114,7 @@ router.patch('/:contactId', validationUpdateContact, async (req, res, next) => {
   }
 });
 
-//Route to get contact by ID whith favorite field
+//  Route to get contact by ID whith favorite field
 router.patch(
   '/:contactId/favorite',
   validationUpdateStatusContact,
