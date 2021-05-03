@@ -1,14 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const Contacts = require('../../model/contacts');
-const {
-  validationCreateContact,
-  validationUpdateContact,
-  validationUpdateStatusContact,
-} = require('./validationContact');
+const Contacts = require('../model');
 
-//  Route to get all contacts
-router.get('/', async (req, res, next) => {
+//  function to get all contacts
+const getAllContacts = async (req, res, next) => {
   try {
     const contacts = await Contacts.getAllContacts();
     return res.json({
@@ -21,10 +14,10 @@ router.get('/', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-});
+};
 
-//  Route to get contact by ID
-router.get('/:contactId', async (req, res, next) => {
+//  function to get contact by ID
+const getContactById = async (req, res, next) => {
   try {
     const contact = await Contacts.getContactById(req.params.contactId);
     if (contact) {
@@ -45,10 +38,10 @@ router.get('/:contactId', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-});
+};
 
-//  Route to create a contact
-router.post('/', validationCreateContact, async (req, res, next) => {
+//  function to create a contact
+const createContact = async (req, res, next) => {
   try {
     const contact = await Contacts.addContact(req.body);
     return res.status(201).json({
@@ -61,10 +54,10 @@ router.post('/', validationCreateContact, async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-});
+};
 
-//  Route to delete a contact by ID
-router.delete('/:contactId', async (req, res, next) => {
+//  function to delete a contact by ID
+const removeContact = async (req, res, next) => {
   try {
     const contact = await Contacts.removeContact(req.params.contactId);
     if (contact) {
@@ -85,10 +78,10 @@ router.delete('/:contactId', async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-});
+};
 
-//  Route to update a contact by ID
-router.patch('/:contactId', validationUpdateContact, async (req, res, next) => {
+//  function to update a contact by ID
+const updateContact = async (req, res, next) => {
   try {
     const contact = await Contacts.updateContact(
       req.params.contactId,
@@ -112,12 +105,10 @@ router.patch('/:contactId', validationUpdateContact, async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-});
+};
 
-//  Route to get contact by ID whith favorite field
-router.patch(
-  '/:contactId/favorite',
-  validationUpdateStatusContact,
+//  function to get contact by ID whith favorite field
+const updateStatusContact =
   async (req, res, next) => {
     try {
       const contact = await Contacts.updateStatusContact(
@@ -152,7 +143,13 @@ router.patch(
     } catch (e) {
       next(e);
     }
-  },
-);
+  };
 
-module.exports = router;
+module.exports = {
+        getAllContacts,
+        getContactById,
+        createContact,
+        removeContact,
+        updateContact,
+        updateStatusContact
+ }
