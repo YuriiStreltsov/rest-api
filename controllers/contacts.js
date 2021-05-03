@@ -1,4 +1,4 @@
-const Contacts = require('../model/contacts');
+const Contacts = require('../model');
 
 //  function to get all contacts
 const getAllContacts = async (req, res, next) => {
@@ -108,47 +108,48 @@ const updateContact = async (req, res, next) => {
 };
 
 //  function to get contact by ID whith favorite field
-const updateStatusContact = async (req, res, next) => {
-  try {
-    const contact = await Contacts.updateStatusContact(
-      req.params.contactId,
-      req.body,
-    );
-    console.log(typeof req.body);
-    const isFavorite = Object.keys(req.body).some(el => el === 'favorite');
-    console.log(isFavorite);
-    if (!isFavorite) {
-      return res.status(400).json({
-        status: 'error',
-        code: 400,
-        data: { message: 'missing field favorite' },
-      });
+const updateStatusContact =
+  async (req, res, next) => {
+    try {
+      const contact = await Contacts.updateStatusContact(
+        req.params.contactId,
+        req.body,
+      );
+      console.log(typeof req.body);
+      const isFavorite = Object.keys(req.body).some(el => el === 'favorite');
+      console.log(isFavorite);
+      if (!isFavorite) {
+        return res.status(400).json({
+          status: 'error',
+          code: 400,
+          data: { message: 'missing field favorite' },
+        });
+      }
+      if (contact) {
+        return res.json({
+          status: 'success',
+          code: 200,
+          data: {
+            contact,
+          },
+        });
+      } else {
+        return res.status(404).json({
+          status: 'error',
+          code: 404,
+          data: 'Not Found',
+        });
+      }
+    } catch (e) {
+      next(e);
     }
-    if (contact) {
-      return res.json({
-        status: 'success',
-        code: 200,
-        data: {
-          contact,
-        },
-      });
-    } else {
-      return res.status(404).json({
-        status: 'error',
-        code: 404,
-        data: 'Not Found',
-      });
-    }
-  } catch (e) {
-    next(e);
-  }
-};
+  };
 
 module.exports = {
-  getAllContacts,
-  getContactById,
-  createContact,
-  removeContact,
-  updateContact,
-  updateStatusContact,
-};
+        getAllContacts,
+        getContactById,
+        createContact,
+        removeContact,
+        updateContact,
+        updateStatusContact
+ }
