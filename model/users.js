@@ -14,7 +14,7 @@ const create = async userOptions => {
 };
 
 const updateToken = async (id, token) => {
-  return await User.updateToken(id, token);
+  return await User.updateOne({ _id: id }, { token });
 };
 
 module.exports = {
