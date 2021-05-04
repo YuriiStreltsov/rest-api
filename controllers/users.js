@@ -1,5 +1,9 @@
 const { HttpCode } = require('../helper/constants');
 const Users = require('../model/users');
+const jwt = require('jsonwebtoken');
+
+require('dotenv').config();
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const signup = async (req, res, next) => {
   const { email } = req.body;
@@ -29,7 +33,38 @@ const signup = async (req, res, next) => {
   }
 };
 
-const login = async (req, res, next) => {};
+const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await Users.findByEmail(email);
+
+  const isValidPassword = await user?.validPassword(password);
+  if (!user || !isValidPassword) {
+    return res.status(HttpCode.UNAUTHORIZED).json({
+      status: '',
+      code: HttpCode.UNAUTHORIZED,
+      message: 'Email or password is wrong',
+    });
+  }
+  try {
+    const payload = { id: user.id };
+    const token = jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '1h' });
+    await Users.updateToken(user.id, token);
+    return res.status(HttpCode.OK).json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: {
+        token,
+        user: {
+          email: user.email,
+          subscription: user.subscription,
+        },
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 const logout = async (req, res, next) => {};
 
 module.exports = {
