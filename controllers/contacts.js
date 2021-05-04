@@ -1,4 +1,4 @@
-const Contacts = require('../model');
+const Contacts = require('../model/contacts');
 const { HttpCode } = require('../helper/constants');
 
 //  function to get all contacts
