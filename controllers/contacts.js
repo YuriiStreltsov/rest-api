@@ -46,10 +46,13 @@ const getContactById = async (req, res, next) => {
 //  function to create a contact
 const createContact = async (req, res, next) => {
   const userId = req.user?.id;
-  const { name } = req.body;
-  const oldContact = await Contacts.getAllContacts(userId, name);
+  const queryName = req.body.name;
+  console.log(queryName);
+  const oldContact = await (await Contacts.getAllContacts(userId)).find(
+    ({ name }) => name === queryName,
+  );
   console.log(oldContact);
-  if (oldContact.length !== 0) {
+  if (oldContact) {
     return res.status(HttpCode.CONFLICT).json({
       status: 'error',
       code: HttpCode.CONFLICT,
