@@ -4,7 +4,8 @@ const { HttpCode } = require('../helper/constants');
 //  function to get all contacts
 const getAllContacts = async (req, res, next) => {
   try {
-    const contacts = await Contacts.getAllContacts();
+    const userId = req.user?.id;
+    const contacts = await Contacts.getAllContacts(userId, req.query);
     return res.json({
       status: 'succes',
       code: HttpCode.OK,
@@ -20,7 +21,8 @@ const getAllContacts = async (req, res, next) => {
 //  function to get contact by ID
 const getContactById = async (req, res, next) => {
   try {
-    const contact = await Contacts.getContactById(req.params.contactId);
+    const userId = req.user?.id;
+    const contact = await Contacts.getContactById(userId, req.params.contactId);
     if (contact) {
       return res.json({
         status: 'success',
@@ -43,8 +45,19 @@ const getContactById = async (req, res, next) => {
 
 //  function to create a contact
 const createContact = async (req, res, next) => {
+  const userId = req.user?.id;
+  const { name } = req.body;
+  const oldContact = await Contacts.getAllContacts(userId, name);
+  console.log(oldContact);
+  if (oldContact.length !== 0) {
+    return res.status(HttpCode.CONFLICT).json({
+      status: 'error',
+      code: HttpCode.CONFLICT,
+      message: 'This Name in use',
+    });
+  }
   try {
-    const contact = await Contacts.addContact(req.body);
+    const contact = await Contacts.createContact(userId, req.body);
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
@@ -60,7 +73,8 @@ const createContact = async (req, res, next) => {
 //  function to delete a contact by ID
 const removeContact = async (req, res, next) => {
   try {
-    const contact = await Contacts.removeContact(req.params.contactId);
+    const userId = req.user?.id;
+    const contact = await Contacts.removeContact(userId, req.params.contactId);
     if (contact) {
       return res.json({
         status: 'success',
@@ -84,7 +98,9 @@ const removeContact = async (req, res, next) => {
 //  function to update a contact by ID
 const updateContact = async (req, res, next) => {
   try {
+    const userId = req.user?.id;
     const contact = await Contacts.updateContact(
+      userId,
       req.params.contactId,
       req.body,
     );
@@ -111,7 +127,9 @@ const updateContact = async (req, res, next) => {
 //  function to get contact by ID whith favorite field
 const updateStatusContact = async (req, res, next) => {
   try {
+    const userId = req.user?.id;
     const contact = await Contacts.updateStatusContact(
+      userId,
       req.params.contactId,
       req.body,
     );
