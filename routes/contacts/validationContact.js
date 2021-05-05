@@ -34,14 +34,9 @@ const schemaUpdateStatusContact = Joi.object({
     .optional(),
 });
 
-const validate = async (schema, obj, next) => {
-  try {
-    await schema.validateAsync(obj);
-    return next();
-  } catch (err) {
-    console.log(err);
-    next({ status: 400, message: err.message.replace(/"/g, "'") });
-  }
+const validate = async (schema, obj) => {
+  const result = await schema.validateAsync(obj);
+  return result;
 };
 
 module.exports = {
