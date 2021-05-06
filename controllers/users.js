@@ -22,10 +22,8 @@ const signup = async (req, res, next) => {
       status: 'success',
       code: HttpCode.CREATED,
       data: {
-        user: {
-          email: newUser.email,
-          subscription: newUser.subscription,
-        },
+        email: user.email,
+        subscription: user.subscription,
       },
     });
   } catch (e) {
@@ -74,23 +72,40 @@ const logout = async (req, res, next) => {
 const current = async (req, res, next) => {
   const userId = req.user?.id;
   const user = await Users.getCurrent(userId);
-  if (user) {
-    return res.json({
-      status: 'success',
-      code: HttpCode.OK,
-      data: {
-        user: {
+  try {
+    if (user) {
+      return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: {
           email: user.email,
           subscription: user.subscription,
         },
-      },
-    });
-  } else {
-    return res.status(HttpCode.NOT_FOUND).json({
-      status: 'error',
-      code: HttpCode.NOT_FOUND,
-      data: 'Not Found',
-    });
+      });
+    }
+  } catch (e) {
+    next(e);
+  }
+};
+
+const update = async (req, res, next) => {
+  const userId = req.user?.id;
+  const findUser = await Users.getCurrent(userId);
+  console.log(findUser);
+  const user = await Users.updateSubscription(userId, req.body);
+  try {
+    if (user) {
+      return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: {
+          email: user.email,
+          subscription: user.subscription,
+        },
+      });
+    }
+  } catch (e) {
+    next(e);
   }
 };
 
@@ -99,4 +114,5 @@ module.exports = {
   login,
   logout,
   current,
+  update,
 };
