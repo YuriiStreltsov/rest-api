@@ -134,17 +134,14 @@ const updateStatusContact = async (req, res, next) => {
       req.params.contactId,
       req.body,
     );
-    console.log(typeof req.body);
-    const isFavorite = Object.keys(req.body).some(el => el === 'favorite');
-    console.log(isFavorite);
-    if (!isFavorite) {
+    if (!req.body) {
       return res.status(HttpCode.BAD_REQUEST).json({
         status: 'error',
         code: HttpCode.BAD_REQUEST,
         data: { message: 'missing field favorite' },
       });
     }
-    if (contact) {
+    if (req.body) {
       return res.json({
         status: 'success',
         code: HttpCode.OK,

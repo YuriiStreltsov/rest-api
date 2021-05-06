@@ -26,12 +26,6 @@ const schemaUpdateContact = Joi.object({
 // Validation when updating status of contact
 const schemaUpdateStatusContact = Joi.object({
   favorite: Joi.boolean().required(),
-  name: Joi.string().min(3).max(30).optional(),
-  email: Joi.string().email().optional(),
-  phone: Joi.string()
-    .regex(/^[0-9]{10}$/)
-    .messages({ 'string.pattern.base': `Phone number must have 10 digits.` })
-    .optional(),
 });
 
 const validate = async (schema, obj) => {
