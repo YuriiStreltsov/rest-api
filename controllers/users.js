@@ -22,8 +22,8 @@ const signup = async (req, res, next) => {
       status: 'success',
       code: HttpCode.CREATED,
       data: {
-        email: user.email,
-        subscription: user.subscription,
+        email: newUser.email,
+        subscription: newUser.subscription,
       },
     });
   } catch (e) {
