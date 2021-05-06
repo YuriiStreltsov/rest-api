@@ -5,13 +5,19 @@ const guard = require('../../helper/guard');
 const handleError = require('../../helper/handle-validError');
 
 const {
+  validationQueryContact,
   validationCreateContact,
   validationUpdateContact,
   validationUpdateStatusContact,
 } = require('./validationContact');
 
 //  Route all contacts
-router.get('/', guard, ctrl.getAllContacts);
+router.get(
+  '/',
+  guard,
+  handleError(validationQueryContact),
+  ctrl.getAllContacts,
+);
 
 //  Route a contact by ID
 router.get('/:contactId', guard, ctrl.getContactById);

@@ -2,7 +2,18 @@ const Contacts = require('./schemas/contact');
 
 // Function Get all contacts
 const getAllContacts = async (userId, query) => {
-  return await Contacts.find({ owner: userId });
+  const { favorite = null, limit = 5, page = 1 } = query;
+  const optionsSearch = { owner: userId };
+
+  if (favorite !== null) {
+    optionsSearch.favorite = favorite;
+  }
+
+  const result = await Contacts.paginate(optionsSearch, {
+    limit,
+    page,
+  });
+  return result;
 };
 
 // Function Get contact by Id
