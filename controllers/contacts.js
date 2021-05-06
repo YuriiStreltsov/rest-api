@@ -47,11 +47,9 @@ const getContactById = async (req, res, next) => {
 const createContact = async (req, res, next) => {
   const userId = req.user?.id;
   const queryName = req.body.name;
-  console.log(queryName);
   const oldContact = await (await Contacts.getAllContacts(userId)).find(
     ({ name }) => name === queryName,
   );
-  console.log(oldContact);
   if (oldContact) {
     return res.status(HttpCode.CONFLICT).json({
       status: 'error',
