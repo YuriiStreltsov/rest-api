@@ -71,8 +71,32 @@ const logout = async (req, res, next) => {
   return res.status(HttpCode.NO_CONTENT).json({});
 };
 
+const current = async (req, res, next) => {
+  const userId = req.user?.id;
+  const user = await Users.getCurrent(userId);
+  if (user) {
+    return res.json({
+      status: 'success',
+      code: HttpCode.OK,
+      data: {
+        user: {
+          email: user.email,
+          subscription: user.subscription,
+        },
+      },
+    });
+  } else {
+    return res.status(HttpCode.NOT_FOUND).json({
+      status: 'error',
+      code: HttpCode.NOT_FOUND,
+      data: 'Not Found',
+    });
+  }
+};
+
 module.exports = {
   signup,
   login,
   logout,
+  current,
 };

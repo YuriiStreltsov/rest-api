@@ -8,5 +8,6 @@ const handleError = require('../../helper/handle-validError');
 router.post('/signup', handleError(validationUser), ctrl.signup);
 router.post('/login', handleError(validationUser), ctrl.login);
 router.post('/logout', guard, ctrl.logout);
+router.get('/current', guard, ctrl.current);
 
 module.exports = router;
