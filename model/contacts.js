@@ -1,49 +1,55 @@
-const Contacts = require('./schema/contacts');
+const Contacts = require('./schemas/contact');
 
 // Function Get all contacts
-const getAllContacts = async () => {
-  const allContacts = await Contacts.find();
-  return allContacts;
+const getAllContacts = async (userId, query) => {
+  const { favorite = null, limit = 5, page = 1 } = query;
+  const optionsSearch = { owner: userId };
+
+  if (favorite !== null) {
+    optionsSearch.favorite = favorite;
+  }
+
+  const result = await Contacts.paginate(optionsSearch, {
+    limit,
+    page,
+  });
+  return result;
 };
 
 // Function Get contact by Id
-const getContactById = async contactId => {
-  const contact = await Contacts.findById(contactId);
-  return contact;
+const getContactById = async (userId, contactId) => {
+  return await Contacts.findById(contactId);
 };
 
 // Function delete contacts
-const removeContact = async contactId => {
-  const contact = Contacts.findByIdAndRemove(contactId);
-  return contact;
+const removeContact = async (userId, contactId) => {
+  return await Contacts.findByIdAndRemove(contactId);
 };
 
 // Function create contact
-const addContact = async body => {
-  const newContact = Contacts.create({
+const createContact = async (userId, body) => {
+  return await Contacts.create({
     ...body,
     ...(body.favorite ? {} : { favorite: false }),
+    owner: userId,
   });
-  return newContact;
 };
 
 // Function update contact
-const updateContact = async (contactId, body) => {
-  const contact = Contacts.findByIdAndUpdate(contactId, body, { new: true });
-  return contact;
+const updateContact = async (userId, contactId, body) => {
+  return await Contacts.findByIdAndUpdate(contactId, body, { new: true });
 };
 
 // Function update fild favorite in contact
-const updateStatusContact = async (contactId, body) => {
-  const contact = Contacts.findByIdAndUpdate(contactId, body, { new: true });
-  return contact;
+const updateStatusContact = async (userId, contactId, body) => {
+  return await Contacts.findByIdAndUpdate(contactId, body, { new: true });
 };
 
 module.exports = {
   getAllContacts,
   getContactById,
   removeContact,
-  addContact,
+  createContact,
   updateContact,
   updateStatusContact,
 };

@@ -13,6 +13,14 @@ const schemaCreateContact = Joi.object({
     .required(),
 });
 
+// Validation when query contact
+const schemaQueryContact = Joi.object({
+  // filter: Joi.string().optional(),
+  limit: Joi.number().integer().min(1).max(20).optional(),
+  page: Joi.number().integer().min(0).optional(),
+  favorite: Joi.boolean().optional(),
+}).without('sortBy', 'sortByDesc');
+
 // Validation when updating a contact
 const schemaUpdateContact = Joi.object({
   name: Joi.string().min(3).max(30).optional(),
@@ -26,25 +34,17 @@ const schemaUpdateContact = Joi.object({
 // Validation when updating status of contact
 const schemaUpdateStatusContact = Joi.object({
   favorite: Joi.boolean().required(),
-  name: Joi.string().min(3).max(30).optional(),
-  email: Joi.string().email().optional(),
-  phone: Joi.string()
-    .regex(/^[0-9]{10}$/)
-    .messages({ 'string.pattern.base': `Phone number must have 10 digits.` })
-    .optional(),
 });
 
-const validate = async (schema, obj, next) => {
-  try {
-    await schema.validateAsync(obj);
-    return next();
-  } catch (err) {
-    console.log(err);
-    next({ status: 400, message: err.message.replace(/"/g, "'") });
-  }
+const validate = async (schema, obj) => {
+  const result = await schema.validateAsync(obj);
+  return result;
 };
 
 module.exports = {
+  validationQueryContact: async (req, res, next) => {
+    return await validate(schemaQueryContact, req.query, next);
+  },
   validationCreateContact: async (req, res, next) => {
     return await validate(schemaCreateContact, req.body, next);
   },
