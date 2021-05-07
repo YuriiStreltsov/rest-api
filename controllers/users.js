@@ -90,8 +90,6 @@ const current = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const userId = req.user?.id;
-  const findUser = await Users.getCurrent(userId);
-  console.log(findUser);
   const user = await Users.updateSubscription(userId, req.body);
   try {
     if (user) {
