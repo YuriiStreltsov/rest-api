@@ -3,7 +3,7 @@
 ### О проекте
 
 Это учебный проект, созданый во время обучения в компании
-[GoIt](https://goit.ua/) на курсе Full-Stack Developer (Node.js). Используя
+`[GoIt](https://goit.ua/)` на курсе Full-Stack Developer (Node.js). Используя
 фреймворк `Express` создаётся Rest-Api приложение телефонной книги.
 
 ### Основные возможности
