@@ -60,9 +60,10 @@
 `/contacts/:contactId` - удаление контакта пользователя
 
 ---
+---
 
 
-#### **For users**
++ **For users**
 
 ---
 
