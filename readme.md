@@ -27,6 +27,7 @@
 
 ### Маршруты REST_API
 
+
 + **For contacts**
 
 ---
@@ -58,7 +59,10 @@
 
 `/contacts/:contactId` - удаление контакта пользователя
 
-#### **For contacts**
+---
+
+
+#### **For users**
 
 ---
 
