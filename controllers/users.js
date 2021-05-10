@@ -89,7 +89,7 @@ const current = async (req, res, next) => {
   }
 };
 
-const update = async (req, res, next) => {
+const updateSubscription = async (req, res, next) => {
   const userId = req.user?.id;
   const user = await Users.updateSubscription(userId, req.body);
   try {
@@ -108,10 +108,21 @@ const update = async (req, res, next) => {
   }
 };
 
+const updateAvatar = async (req, res, next) => {
+  try {
+    return res
+      .status(HttpCode.OK)
+      .json({ status: 'success', code: HttpCode.OK });
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   signup,
   login,
   logout,
   current,
-  update,
+  updateSubscription,
+  updateAvatar,
 };
