@@ -24,6 +24,7 @@ const signup = async (req, res, next) => {
       data: {
         email: newUser.email,
         subscription: newUser.subscription,
+        avatarUrl: newUser.avatarUrl,
       },
     });
   } catch (e) {
