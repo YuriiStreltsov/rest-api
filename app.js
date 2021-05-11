@@ -5,12 +5,14 @@ const { HttpCode } = require('./helper/constants');
 
 const contactsRouter = require('./routes/contacts');
 const usersRouter = require('./routes/users');
+const { static } = require('express');
 
 const app = express();
 
 const formatsLogger = app.get('env') === 'development' ? 'dev' : 'short';
 
 app.use(logger(formatsLogger));
+app.use(express.static('public'));
 app.use(cors());
 app.use(express.json());
 
