@@ -6,6 +6,7 @@ const fs = require('fs/promises');
 const path = require('path');
 
 require('dotenv').config();
+const EmailService = require('../services/email');
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 const signup = async (req, res, next) => {
@@ -21,13 +22,20 @@ const signup = async (req, res, next) => {
 
   try {
     const newUser = await Users.create(req.body);
+    const { email, subscription, avatarUrl, verifyToken } = newUser;
+    try {
+      const emailService = new EmailService(process.env.NODE_ENV);
+      await emailService.sendVerifyEmail(verifyToken, email);
+    } catch (error) {
+      console.log(error.message);
+    }
     return res.status(HttpCode.CREATED).json({
       status: 'success',
       code: HttpCode.CREATED,
       data: {
-        email: newUser.email,
-        subscription: newUser.subscription,
-        avatarUrl: newUser.avatarUrl,
+        email,
+        subscription,
+        avatarUrl,
       },
     });
   } catch (e) {
@@ -40,7 +48,7 @@ const login = async (req, res, next) => {
   const user = await Users.findByEmail(email);
 
   const isValidPassword = await user?.validPassword(password);
-  if (!user || !isValidPassword) {
+  if (!user || !isValidPassword || !user.verify) {
     return res.status(HttpCode.UNAUTHORIZED).json({
       status: 'error',
       code: HttpCode.UNAUTHORIZED,
