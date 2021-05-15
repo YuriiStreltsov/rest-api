@@ -182,6 +182,34 @@ const verify = async (req, res, next) => {
   }
 };
 
+const repeatVerify = async (req, res, next) => {
+  const { email } = req.body;
+  try {
+    const user = await Users.findByEmail(email);
+    if (user && !user.verify) {
+      const { verifyToken, email } = user;
+      const emailService = new EmailService(process.env.NODE_ENV);
+      await emailService.sendVerifyEmail(verifyToken, email);
+      return res.status(HttpCode.OK).json({
+        status: 'success',
+        code: HttpCode.OK,
+        data: {
+          message: 'Verification email sent',
+        },
+      });
+    }
+    return res.status(HttpCode.BAD_REQUEST).json({
+      status: 'error',
+      code: HttpCode.BAD_REQUEST,
+      data: {
+        message: 'Verification has already been passed',
+      },
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 module.exports = {
   signup,
   login,
@@ -190,4 +218,5 @@ module.exports = {
   updateSubscription,
   updateAvatar,
   verify,
+  repeatVerify,
 };
