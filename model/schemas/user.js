@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
+const { nanoid } = require('nanoid');
 
 const SALT_FACTOR = 5;
 
@@ -38,6 +39,7 @@ const userSchema = new Schema(
     verifyToken: {
       type: String,
       required: [true, 'Verify token is required'],
+      default: nanoid(),
     },
   },
   {
