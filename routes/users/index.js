@@ -10,6 +10,9 @@ router.post('/signup', handleError(validationUser), ctrl.signup);
 router.post('/login', handleError(validationUser), ctrl.login);
 router.post('/logout', guard, ctrl.logout);
 router.get('/current', guard, ctrl.current);
+
+router.get('/verify/:verificationToken', ctrl.verify);
+
 router.patch(
   '/',
   guard,
