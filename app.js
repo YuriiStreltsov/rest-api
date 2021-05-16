@@ -5,7 +5,6 @@ const { HttpCode } = require('./helper/constants');
 
 const contactsRouter = require('./routes/contacts');
 const usersRouter = require('./routes/users');
-const { static } = require('express');
 
 const app = express();
 
